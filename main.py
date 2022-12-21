@@ -1,16 +1,19 @@
-# This is a sample Python script.
+import discord
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import Controller.SystemController as SC
+
+from discord.ext import commands
+
+import config
+
+TOKEN = config.access_token
+
+bot = commands.Bot(command_prefix='$', intents=discord.Intents.all())
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+@bot.command()
+async def start(ctx):
+    sc = SC.SystemController(ctx)
+    # TODO
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+bot.run(TOKEN)
