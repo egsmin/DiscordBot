@@ -1,8 +1,9 @@
 import discord
 import Controller.SystemController as SC
 from discord.ext import commands
+import config
 
-TOKEN = "MTAxNDkxMTc4OTA1OTgwOTMyMA.GW_uD1.IHZ6bDklLaUP6Fb9Brrcu4o_Zfd_QGRtSHXK-8"
+TOKEN = config.access_token
 
 bot = commands.Bot(command_prefix='$', intents=discord.Intents.all())
 
