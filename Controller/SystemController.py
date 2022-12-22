@@ -52,8 +52,8 @@ class SystemController:
         temp_dict = {}
 
         for i in range(len(self.members)):
-            if i != len(self.members)-1:
-                temp_dict[mixed[i]] = mixed[i+1]
+            if i != len(self.members) - 1:
+                temp_dict[mixed[i]] = mixed[i + 1]
             else:
                 temp_dict[mixed[i]] = mixed[0]
 
@@ -95,4 +95,71 @@ class SystemController:
         self.reset_current_points()
         self.mix_the_partners()
 
-    # Notifications
+    # Notification Methods
+
+    # # Start Menu Bundle
+
+    def start_menu_button_start(self):
+        pass
+
+    def start_menu_button_intro(self):
+        pass
+
+    def start_menu_button_konfiguration(self):
+        pass
+
+    def start_menu_button_beenden(self):
+        pass
+
+    # # Conf Bundle
+
+    def conf_select_lerndauer(self):
+        pass
+
+    def conf_select_pausedauer(self):
+        pass
+
+    def conf_select_stummen_nicht_stummen(self):
+        pass
+
+    def conf_button_zurueck(self):
+        pass
+
+    # # Intro Bundle
+
+    def intro_button_zurueck(self):
+        pass
+
+    def intro_button_tutorial(self):
+        pass
+
+    # # Pre Bundle
+
+    def pre_button_bereit(self):
+        pass
+
+    # # Learn Bundle
+
+    def learn_button_stop(self):
+        pass
+
+    def learn_button_phase_ueberspringen(self):
+        pass
+
+    def learn_button_melden(self):
+        pass
+
+    # # Pause Bundle
+
+    def pause_button_stop(self):
+        pass
+
+    def pause_button_phase_ueberspringen(self):
+        pass
+
+    def pause_button_melden(self):
+        pass
+
+    def pause_select_stummen_nicht_stummen(self):
+        pass
+    
