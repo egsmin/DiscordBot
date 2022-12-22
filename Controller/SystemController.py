@@ -20,9 +20,7 @@ class SystemController:
         self.current_points = {}
         self.partners = {}
 
-        self.refresh_global_points()
-        self.reset_current_points()
-        self.mix_the_partners()
+        self.bunch(after_learning=False)
 
         self.phase = None
 
@@ -39,15 +37,6 @@ class SystemController:
 
     def refresh_members(self):
         self.members = self.get_members()
-
-    def reset_global_points(self):
-        temp_dict = {}
-        self.refresh_members()
-
-        for m in self.members:
-            temp_dict[m.name] = 0
-
-        self.global_points = temp_dict
 
     def reset_current_points(self):
         temp_dict = {}
@@ -95,5 +84,15 @@ class SystemController:
         for m in cop_dict.keys():
             if m not in [i.name for i in self.members]:
                 self.global_points.pop(m)
+
+    def bunch(self, after_learning=False):
+        self.refresh_members()
+
+        if after_learning:
+            self.calculate_points()
+
+        self.refresh_global_points()
+        self.reset_current_points()
+        self.mix_the_partners()
 
     # Notifications
