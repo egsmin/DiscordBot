@@ -20,15 +20,17 @@ class SystemController:
         self.current_points = {}
         self.partners = {}
 
-        self.reset_global_points()
+        self.refresh_global_points()
         self.reset_current_points()
         self.mix_the_partners()
-        a=2
 
         self.phase = None
 
         self.learning = True
         self.stopped = False
+
+        self.learning_duration = 30
+        self.pause_duration = 5
 
     # Member Methods
 
@@ -80,23 +82,18 @@ class SystemController:
                 else:
                     self.global_points[key_iter] += self.current_points[key_iter]
 
-    def refresh_points(self):
+    def refresh_global_points(self):
+        self.refresh_members()
+
         # Check if someone new has joined
         for m in self.members:
             if m.name not in self.global_points.keys():
                 self.global_points[m.name] = 0
 
         # Check if someone has left
-        for m in self.global_points.keys():
+        cop_dict = self.global_points.copy()
+        for m in cop_dict.keys():
             if m not in [i.name for i in self.members]:
                 self.global_points.pop(m)
 
-        self.reset_current_points()
-
-
-
-
     # Notifications
-
-
-
