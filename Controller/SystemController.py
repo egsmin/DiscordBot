@@ -68,6 +68,35 @@ class SystemController:
 
         self.partners = temp_dict
 
+    def calculate_points(self):
+        if all([points == 10 for points in self.current_points.values()]):
+            for key_iter in self.global_points.keys():
+                self.global_points[key_iter] += 20
+
+        else:
+            for key_iter in self.current_points.keys():
+                if self.current_points[key_iter] == 10:
+                    self.global_points[key_iter] += 15
+                else:
+                    self.global_points[key_iter] += self.current_points[key_iter]
+
+    def refresh_points(self):
+        # Check if someone new has joined
+        for m in self.members:
+            if m.name not in self.global_points.keys():
+                self.global_points[m.name] = 0
+
+        # Check if someone has left
+        for m in self.global_points.keys():
+            if m not in [i.name for i in self.members]:
+                self.global_points.pop(m)
+
+        self.reset_current_points()
+
+
+
+
     # Notifications
+
 
 
