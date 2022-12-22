@@ -25,26 +25,27 @@ class StartMenuBundle:
     )
 
     class View(discord.ui.View):
-        def __init__(self, sc: Controller.SystemController):
+        def __init__(self, sc):
+            super().__init__(timeout=3600)
             self.sc = sc
 
         @discord.ui.button(label='Start', style=discord.ButtonStyle.success)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_start(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
-            await self.sc.start_menu_button_start
+            await self.sc.start_menu_button_start()
 
         @discord.ui.button(label='Intro', style=discord.ButtonStyle.secondary)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_intro(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.start_menu_button_intro()
 
         @discord.ui.button(label='Konfiguration', style=discord.ButtonStyle.blurple)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_konfiguration(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.start_menu_button_konfiguration()
 
         @discord.ui.button(label='Beenden', style=discord.ButtonStyle.danger)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_beenden(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.start_menu_button_beenden()
 
@@ -72,29 +73,30 @@ class ConfBundle:
     )
 
     class View(discord.ui.View):
-        def __init__(self, sc: Controller.SystemController):
+        def __init__(self, sc):
+            super().__init__(timeout=3600)
             self.sc = sc
 
-        @discord.ui.select(options=[discord.SelectOption(label=str(i) + " Minuten") for i in [5, 10, 15, 20, 25, 30]],
+        @discord.ui.select(options=[discord.SelectOption(label=str(i) + " Minuten") for i in [1, 5, 10, 15, 20, 25, 30]],
                            placeholder="Lern-Dauer")
-        async def select_callback(self, select, interaction):
+        async def select_callback_learn_duration(self, interaction, select):
             await interaction.response.defer()
-            await self.sc.conf_select_lerndauer()
+            await self.sc.conf_select_lerndauer(select.values[0].split(" ")[0])
 
-        @discord.ui.select(options=[discord.SelectOption(label=str(i) + " Minuten") for i in [5, 10, 15, 20, 25, 30]],
+        @discord.ui.select(options=[discord.SelectOption(label=str(i) + " Minuten") for i in [1, 5, 10, 15, 20, 25, 30]],
                            placeholder="Pause-Dauer")
-        async def select_callback(self, select, interaction):
+        async def select_callback_pause_duration(self, interaction, select):
             await interaction.response.defer()
-            await self.sc.conf_select_pausedauer()
+            await self.sc.conf_select_lerndauer(select.values[0].split(" ")[0])
 
         @discord.ui.select(options=[discord.SelectOption(label="Stummen"), discord.SelectOption(label="Nicht Stummen")],
                            placeholder="Stummen / Nicht Stummen")
-        async def select_callback(self, select, interaction):
+        async def select_callback_mute(self, interaction, select):
             await interaction.response.defer()
-            await self.sc.conf_select_stummen_nicht_stummen()
+            await self.sc.conf_select_stummen_nicht_stummen(select.values[0] == "Stummen")
 
         @discord.ui.button(label='Zurück', style=discord.ButtonStyle.red, row=4)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_back(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.conf_button_zurueck()
 
@@ -145,16 +147,17 @@ class IntroductionBundle:
     )
 
     class View(discord.ui.View):
-        def __init__(self, sc: Controller.SystemController):
+        def __init__(self, sc):
+            super().__init__(timeout=3600)
             self.sc = sc
 
         @discord.ui.button(label='Zurück', style=discord.ButtonStyle.red)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_back(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.intro_button_zurueck()
 
         @discord.ui.button(label='Tutorial', style=discord.ButtonStyle.green)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_tutorial(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.intro_button_tutorial()
 
@@ -177,15 +180,16 @@ class TutorialBundle:
     )
 
     class View(discord.ui.View):
-        def __init__(self, sc: Controller.SystemController):
+        def __init__(self, sc):
+            super().__init__(timeout=3600)
             self.sc = sc
 
         @discord.ui.button(label='0', style=discord.ButtonStyle.red)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
 
         @discord.ui.select(options=[], placeholder="")
-        async def select_callback(self, select, interaction):
+        async def select_callback(self, interaction, select):
             await interaction.response.defer()
 
     @classmethod
@@ -197,124 +201,148 @@ class TutorialBundle:
 
 
 class PreBundle:
-    embed = discord.Embed(
-        title="Discord Lern-Bot",
-        description="Vorbereitung",
-    ).add_field(
-        name="Bildschirm teilen",
-        value="Bitte aktiviert eure Bildschirmübertragung",
-        inline=False
-    ).add_field(
-        name="Partner beobachten",
-        value="Ihr habt nun einen Partner zugewiesen bekommen (Dieser ändert sich nach jeder Lernphase). Bitte beobachtet dessen Bildschirm. Falls noch unklar ist, wie die Übertragung am Besten beobachtet werden kann, schaut einfach im Start Menü unter Intro -> Tutorial nach, oder schreibt mir \"$tutorial\" per Privatchat",
-        inline=False
-    ).add_field(
-        name="Bereit:",
-        value="->",
-        inline=False
-    )
+    @classmethod
+    def embed(cls, ready_members):
+
+        ready_members_str = "\n".join([i.name for i in ready_members])
+        if ready_members_str == "":
+            ready_members_str = "->"
+        return discord.Embed(
+            title="Discord Lern-Bot",
+            description="Vorbereitung",
+        ).add_field(
+            name="Bildschirm teilen",
+            value="Bitte aktiviert eure Bildschirmübertragung",
+            inline=False
+        ).add_field(
+            name="Partner beobachten",
+            value="Ihr habt nun einen Partner zugewiesen bekommen (Dieser ändert sich nach jeder Lernphase). Bitte beobachtet dessen Bildschirm. Falls noch unklar ist, wie die Übertragung am Besten beobachtet werden kann, schaut einfach im Start Menü unter Intro -> Tutorial nach, oder schreibt mir \"$tutorial\" per Privatchat",
+            inline=False
+        ).add_field(
+            name="Bereit:",
+            value=ready_members_str,
+            inline=False
+        )
 
     class View(discord.ui.View):
-        def __init__(self, sc: Controller.SystemController):
+        def __init__(self, sc):
+            super().__init__(timeout=3600)
             self.sc = sc
 
         @discord.ui.button(label='Bereit', style=discord.ButtonStyle.red)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_ready(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
-            await self.sc.pre_button_bereit()
+            await self.sc.pre_button_bereit(interaction.user)
 
     @classmethod
-    def create_bundle(cls, sc):
+    def create_bundle(cls, sc, ready_members):
         return {
-            "embed": cls.embed,
+            "embed": cls.embed(ready_members),
             "view": cls.View(sc)
         }
 
 
 class LearnBundle:
-    embed = discord.Embed(
-        title="Discord Lern-Bot",
-        description="Lern-Phase",
-    ).add_field(
-        name="Zeit",
-        value="Phase endet ",  # TODO TIMER
-        inline=True,
-    ).add_field(
-        name="Fortschritt",
-        value="ti",  # TODO FORTSCHRITT
-        inline=True
-    )
+
+    @classmethod
+    def embed(cls, stage, dt):
+
+        bar = stage * "🟩" + (10 - stage) * "⬜️"
+
+        return discord.Embed(
+            title="Discord Lern-Bot",
+            description="Lern-Phase",
+        ).add_field(
+            name="Zeit",
+            value="Phase endet <t:" + str(dt) + ":R>",
+            inline=True,
+        ).add_field(
+            name="Fortschritt",
+            value="[" + bar + "]",
+            inline=True
+        )
 
     class View(discord.ui.View):
-        def __init__(self, sc: Controller.SystemController):
+        def __init__(self, sc):
+            super().__init__(timeout=3600)
             self.sc = sc
 
         @discord.ui.button(label='Stop', style=discord.ButtonStyle.red)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_stop(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.learn_button_stop()
 
         @discord.ui.button(label='Phase überspringen', style=discord.ButtonStyle.blurple)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_skip(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.learn_button_phase_ueberspringen()
 
         @discord.ui.button(label='Melden', style=discord.ButtonStyle.gray, disabled=False)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_report(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
-            await self.sc.learn_button_melden()
+            await self.sc.learn_button_melden(interaction.user)
 
     @classmethod
-    def create_bundle(cls, sc):
+    def create_bundle(cls, sc, stage, dt):
         return {
-            "embed": cls.embed,
+            "embed": cls.embed(stage=stage, dt=dt),
             "view": cls.View(sc)
         }
 
 
 class PauseBundle:
-    embed = discord.Embed(
-        title="Discord Lern-Bot",
-        description="Pause",
-    ).add_field(
-        name="Zeit",
-        value="Phase endet ",  # TODO TIMER
-        inline=True,
-    ).add_field(
-        name="Fortschritt",
-        value="ti",  # TODO FORTSCHRITT
-        inline=True
-    )
+    @classmethod
+    def embed(cls, stage, dt, gp):
+        bar = stage * "🟩" + (10 - stage) * "⬜️"
+        pointstr = "\n".join([m + ": " + str(gp[m]) + " Punkte" for m in gp.keys()])
+
+        return discord.Embed(
+            title="Discord Lern-Bot",
+            description="Pause",
+        ).add_field(
+            name="Punkte",
+            value=pointstr,
+            inline=False
+        ).add_field(
+            name="Zeit",
+            value="Phase endet <t:" + str(dt) + ":R>",
+            inline=True,
+        ).add_field(
+            name="Fortschritt",
+            value="[" + bar + "]",
+            inline=True
+        )
 
     class View(discord.ui.View):
-        def __init__(self, sc: Controller.SystemController):
+        def __init__(self, sc):
+            super().__init__(timeout=3600)
             self.sc = sc
 
         @discord.ui.button(label='Stop', style=discord.ButtonStyle.red)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_stop(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.pause_button_stop()
 
         @discord.ui.button(label='Phase überspringen', style=discord.ButtonStyle.blurple)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_skip(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.pause_button_phase_ueberspringen()
 
         @discord.ui.button(label='Melden', style=discord.ButtonStyle.gray, disabled=True)
-        async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        async def button_callback_report(self, interaction: discord.Interaction, button: discord.ui.Button):
             await interaction.response.defer()
             await self.sc.pause_button_melden()
 
         @discord.ui.select(options=[discord.SelectOption(label="Stummen"), discord.SelectOption(label="Nicht Stummen")],
                            placeholder="Stummen / Nicht Stummen")
-        async def select_callback(self, select, interaction):
+        async def select_callback_mute(self, interaction, select):
             await interaction.response.defer()
-            await self.sc.pause_select_stummen_nicht_stummen()
+            await self.sc.pause_select_stummen_nicht_stummen(select.values[0] == "Stummen")
 
     @classmethod
-    def create_bundle(cls, sc):
+    def create_bundle(cls, sc, stage, dt, gp):
         return {
-            "embed": cls.embed,
+            "embed": cls.embed(stage=stage, dt=dt, gp=gp),
             "view": cls.View(sc)
         }
 

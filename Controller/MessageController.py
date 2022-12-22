@@ -8,7 +8,11 @@ class MessageController:
     def __init__(self, ctx, sc):
         self.sc = sc
         self.ctx = ctx
-        self.message = await ctx.send(content="Lädt...")
+        self.message = None
+
+    async def initialize(self):
+        self.message = await self.ctx.send(content="Lädt...")
+        await self.show_start_menu()
 
     async def edit(self, bundle, content=None):
         embed = bundle['embed']
@@ -28,16 +32,16 @@ class MessageController:
         bundle = Bundles.IntroductionBundle.create_bundle(self.sc)
         await self.edit(bundle)
 
-    async def show_pre(self):
-        bundle = Bundles.PreBundle.create_bundle(self.sc)
+    async def show_pre(self, ready_members):
+        bundle = Bundles.PreBundle.create_bundle(self.sc, ready_members)
         await self.edit(bundle)
 
-    async def show_learning(self):
-        bundle = Bundles.LearnBundle.create_bundle(self.sc)
+    async def show_learning(self, stage, dt):
+        bundle = Bundles.LearnBundle.create_bundle(self.sc, stage, dt)
         await self.edit(bundle)
 
-    async def show_pause(self):
-        bundle = Bundles.PauseBundle.create_bundle(self.sc)
+    async def show_pause(self, stage, dt, gp):
+        bundle = Bundles.PauseBundle.create_bundle(self.sc, stage, dt, gp)
         await self.edit(bundle)
 
     async def show_end(self):
