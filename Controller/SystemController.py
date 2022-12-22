@@ -99,67 +99,67 @@ class SystemController:
 
     # # Start Menu Bundle
 
-    def start_menu_button_start(self):
+    async def start_menu_button_start(self):
         pass
 
-    def start_menu_button_intro(self):
+    async def start_menu_button_intro(self):
         pass
 
-    def start_menu_button_konfiguration(self):
+    async def start_menu_button_konfiguration(self):
         pass
 
-    def start_menu_button_beenden(self):
+    async def start_menu_button_beenden(self):
         pass
 
     # # Conf Bundle
 
-    def conf_select_lerndauer(self):
+    async def conf_select_lerndauer(self):
         pass
 
-    def conf_select_pausedauer(self):
+    async def conf_select_pausedauer(self):
         pass
 
-    def conf_select_stummen_nicht_stummen(self):
+    async def conf_select_stummen_nicht_stummen(self):
         pass
 
-    def conf_button_zurueck(self):
+    async def conf_button_zurueck(self):
         pass
 
     # # Intro Bundle
 
-    def intro_button_zurueck(self):
+    async def intro_button_zurueck(self):
         pass
 
-    def intro_button_tutorial(self):
+    async def intro_button_tutorial(self):
         pass
 
     # # Pre Bundle
 
-    def pre_button_bereit(self):
+    async def pre_button_bereit(self):
         pass
 
     # # Learn Bundle
 
-    def learn_button_stop(self):
+    async def learn_button_stop(self):
         pass
 
-    def learn_button_phase_ueberspringen(self):
+    async def learn_button_phase_ueberspringen(self):
         pass
 
-    def learn_button_melden(self):
+    async def learn_button_melden(self):
         pass
 
     # # Pause Bundle
 
-    def pause_button_stop(self):
+    async def pause_button_stop(self):
         pass
 
-    def pause_button_phase_ueberspringen(self):
+    async def pause_button_phase_ueberspringen(self):
         pass
 
-    def pause_button_melden(self):
+    async def pause_button_melden(self):
         pass
 
-    def pause_select_stummen_nicht_stummen(self):
+    async def pause_select_stummen_nicht_stummen(self):
         pass
     

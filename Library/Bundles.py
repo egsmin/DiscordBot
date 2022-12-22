@@ -3,7 +3,6 @@ import Controller
 
 
 class StartMenuBundle:
-
     embed = discord.Embed(
         title="Discord Lern-Bot",
         description="Start Menü",
@@ -24,6 +23,7 @@ class StartMenuBundle:
         value="Beendet das Programm",
         inline=False
     )
+
     class View(discord.ui.View):
         def __init__(self, sc: Controller.SystemController):
             self.sc = sc
@@ -31,18 +31,22 @@ class StartMenuBundle:
         @discord.ui.button(label='Start', style=discord.ButtonStyle.success)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.start_menu_button_start
 
         @discord.ui.button(label='Intro', style=discord.ButtonStyle.secondary)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.start_menu_button_intro()
 
         @discord.ui.button(label='Konfiguration', style=discord.ButtonStyle.blurple)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.start_menu_button_konfiguration()
 
         @discord.ui.button(label='Beenden', style=discord.ButtonStyle.danger)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.start_menu_button_beenden()
 
     @classmethod
     def create_bundle(cls, sc):
@@ -75,20 +79,24 @@ class ConfBundle:
                            placeholder="Lern-Dauer")
         async def select_callback(self, select, interaction):
             await interaction.response.defer()
+            await self.sc.conf_select_lerndauer()
 
         @discord.ui.select(options=[discord.SelectOption(label=str(i) + " Minuten") for i in [5, 10, 15, 20, 25, 30]],
                            placeholder="Pause-Dauer")
         async def select_callback(self, select, interaction):
             await interaction.response.defer()
+            await self.sc.conf_select_pausedauer()
 
         @discord.ui.select(options=[discord.SelectOption(label="Stummen"), discord.SelectOption(label="Nicht Stummen")],
                            placeholder="Stummen / Nicht Stummen")
         async def select_callback(self, select, interaction):
             await interaction.response.defer()
+            await self.sc.conf_select_stummen_nicht_stummen()
 
         @discord.ui.button(label='Zurück', style=discord.ButtonStyle.red, row=4)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.conf_button_zurueck()
 
     @classmethod
     def create_bundle(cls, sc):
@@ -143,10 +151,12 @@ class IntroductionBundle:
         @discord.ui.button(label='Zurück', style=discord.ButtonStyle.red)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.intro_button_zurueck()
 
         @discord.ui.button(label='Tutorial', style=discord.ButtonStyle.green)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.intro_button_tutorial()
 
     @classmethod
     def create_bundle(cls, sc):
@@ -211,6 +221,7 @@ class PreBundle:
         @discord.ui.button(label='Bereit', style=discord.ButtonStyle.red)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.pre_button_bereit()
 
     @classmethod
     def create_bundle(cls, sc):
@@ -226,11 +237,11 @@ class LearnBundle:
         description="Lern-Phase",
     ).add_field(
         name="Zeit",
-        value="Phase endet ", #TODO TIMER
+        value="Phase endet ",  # TODO TIMER
         inline=True,
     ).add_field(
         name="Fortschritt",
-        value="ti", # TODO FORTSCHRITT
+        value="ti",  # TODO FORTSCHRITT
         inline=True
     )
 
@@ -241,14 +252,17 @@ class LearnBundle:
         @discord.ui.button(label='Stop', style=discord.ButtonStyle.red)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.learn_button_stop()
 
         @discord.ui.button(label='Phase überspringen', style=discord.ButtonStyle.blurple)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.learn_button_phase_ueberspringen()
 
         @discord.ui.button(label='Melden', style=discord.ButtonStyle.gray, disabled=False)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.learn_button_melden()
 
     @classmethod
     def create_bundle(cls, sc):
@@ -279,19 +293,23 @@ class PauseBundle:
         @discord.ui.button(label='Stop', style=discord.ButtonStyle.red)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.pause_button_stop()
 
         @discord.ui.button(label='Phase überspringen', style=discord.ButtonStyle.blurple)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.pause_button_phase_ueberspringen()
 
         @discord.ui.button(label='Melden', style=discord.ButtonStyle.gray, disabled=True)
         async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
             await interaction.response.defer()
+            await self.sc.pause_button_melden()
 
         @discord.ui.select(options=[discord.SelectOption(label="Stummen"), discord.SelectOption(label="Nicht Stummen")],
                            placeholder="Stummen / Nicht Stummen")
         async def select_callback(self, select, interaction):
             await interaction.response.defer()
+            await self.sc.pause_select_stummen_nicht_stummen()
 
     @classmethod
     def create_bundle(cls, sc):
