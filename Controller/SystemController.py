@@ -26,7 +26,7 @@ class SystemController:
         self.partners = {}
         self.ready_members = []
 
-        self.bunch(after_learning=False)
+        self.bunch(with_calculation=False)
 
         self.phase = None
 
@@ -95,10 +95,10 @@ class SystemController:
             if m not in [i.name for i in self.members]:
                 self.global_points.pop(m)
 
-    def bunch(self, after_learning=False):
+    def bunch(self, with_calculation=False, ):
         self.refresh_members()
 
-        if after_learning:
+        if with_calculation:
             self.calculate_points()
 
         self.refresh_global_points()
@@ -109,11 +109,18 @@ class SystemController:
 
     async def mute_members(self):
         for member in self.members:
-            await member.edit(mute=True)
+            try:
+                await member.edit(mute=True)
+            except Exception:
+                pass
 
     async def unmute_members(self):
         for member in self.members:
-            await member.edit(mute=False)
+            try:
+                await member.edit(mute=False)
+            except Exception:
+                print("Catched!")
+                pass
 
     # Learning Session
 
@@ -159,7 +166,7 @@ class SystemController:
                         pass
                     finally:
                         await self.unmute_members()
-                        self.bunch(after_learning=True)
+                        self.bunch(with_calculation=True)
                         self.learning = False
 
                 else:
@@ -170,6 +177,7 @@ class SystemController:
                     except asyncio.CancelledError:
                         pass
                     finally:
+                        self.bunch(with_calculation=False)
                         self.learning = True
 
             else:
