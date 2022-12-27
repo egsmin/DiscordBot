@@ -87,7 +87,7 @@ class ConfBundle:
                            placeholder="Pause-Dauer")
         async def select_callback_pause_duration(self, interaction, select):
             await interaction.response.defer()
-            await self.sc.conf_select_lerndauer(select.values[0].split(" ")[0])
+            await self.sc.conf_select_pausedauer(select.values[0].split(" ")[0])
 
         @discord.ui.select(options=[discord.SelectOption(label="Stummen"), discord.SelectOption(label="Nicht Stummen")],
                            placeholder="Stummen / Nicht Stummen")
@@ -216,7 +216,7 @@ class PreBundle:
             inline=False
         ).add_field(
             name="Partner beobachten",
-            value="Ihr habt nun einen Partner zugewiesen bekommen (Dieser ändert sich nach jeder Lernphase). Bitte beobachtet dessen Bildschirm. Falls noch unklar ist, wie die Übertragung am Besten beobachtet werden kann, schaut einfach im Start Menü unter Intro -> Tutorial nach, oder schreibt mir \"$tutorial\" per Privatchat",
+            value="Ihr habt nun einen Partner zugewiesen bekommen. Bitte beobachtet dessen Bildschirm. Falls noch unklar ist, wie die Übertragung am Besten beobachtet werden kann, schaut einfach im Start Menü unter Intro -> Tutorial nach, oder schreibt mir \"$tutorial\" per Privatchat",
             inline=False
         ).add_field(
             name="Bereit:",

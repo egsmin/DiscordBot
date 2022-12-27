@@ -26,24 +26,24 @@ class SystemController:
         self.partners = {}
         self.ready_members = []
 
-        self.bunch(with_calculation=False)
-
         self.phase = None
 
         self.learning = True
         self.stopped = False
+        self.fist = True
 
         self.learning_duration = 30
         self.pause_duration = 5
         self.mute = False
 
     async def start(self):
+        await self.bunch(with_calculation=False)
         await self.message_controller.initialize()
 
     # Member Methods
 
     def get_members(self):
-        return self.voice_channel.members
+        return [i for i in self.voice_channel.members]  # if i.name != "egsm1n"]
 
     def refresh_members(self):
         self.members = self.get_members()
@@ -57,7 +57,7 @@ class SystemController:
 
         self.current_points = temp_dict
 
-    def mix_the_partners(self):
+    async def mix_the_partners_and_write(self):
         mixed = random.sample([i.name for i in self.members], len(self.members))
         temp_dict = {}
 
@@ -68,6 +68,15 @@ class SystemController:
                 temp_dict[mixed[i]] = mixed[0]
 
         self.partners = temp_dict
+
+        for i in self.partners.keys():
+            p = None
+            for m in self.members:
+                if m.name == i:
+                    p = m
+                    break
+
+            await p.send(content="Dein Partner ist: " + self.partners[i])
 
     def calculate_points(self):
         if all([points == 10 for points in self.current_points.values()]):
@@ -81,29 +90,50 @@ class SystemController:
                 else:
                     self.global_points[key_iter] += self.current_points[key_iter]
 
-    def refresh_global_points(self):
+    async def refresh_global_points(self):
         self.refresh_members()
+        changed = False
 
         # Check if someone new has joined
         for m in self.members:
             if m.name not in self.global_points.keys():
                 self.global_points[m.name] = 0
+                changed = True
 
         # Check if someone has left
         cop_dict = self.global_points.copy()
         for m in cop_dict.keys():
             if m not in [i.name for i in self.members]:
                 self.global_points.pop(m)
+                changed = True
 
-    def bunch(self, with_calculation=False, ):
+        if changed and not self.fist:
+            await self.mix_the_partners_and_write()
+
+    async def bunch(self, with_calculation=False):
         self.refresh_members()
 
         if with_calculation:
             self.calculate_points()
 
-        self.refresh_global_points()
+        await self.refresh_global_points()
         self.reset_current_points()
-        self.mix_the_partners()
+
+    async def write_everyones_partner(self):
+        for i in self.partners.keys():
+            p = None
+            for m in self.members:
+                if m.name == i:
+                    p = m
+                    break
+
+            await p.send(content="Dein Partner ist: " + self.partners[i])
+
+    async def admonish(self, reported):
+        for i in self.members:
+            if i.name == reported:
+                await i.send("Du wurdest erwischt. Konzentriere dich wieder auf deine Aufgabe!")
+                break
 
     # Settings Methods
 
@@ -157,6 +187,11 @@ class SystemController:
             if not self.stopped:
                 if self.learning:
                     try:
+                        if not self.fist:
+                            # await self.write_everyones_partner()
+                            pass
+                        else:
+                            self.fist = False
                         if self.mute:
                             await self.mute_members()
 
@@ -166,7 +201,8 @@ class SystemController:
                         pass
                     finally:
                         await self.unmute_members()
-                        self.bunch(with_calculation=True)
+                        await self.bunch(with_calculation=True)
+                        await self.tts_phase_ended()
                         self.learning = False
 
                 else:
@@ -177,7 +213,11 @@ class SystemController:
                     except asyncio.CancelledError:
                         pass
                     finally:
-                        self.bunch(with_calculation=False)
+                        await self.bunch(with_calculation=False)
+
+                        # Decomment this, if tts after pause is needed!
+                        # await self.tts_phase_ended()
+
                         self.learning = True
 
             else:
@@ -191,11 +231,15 @@ class SystemController:
         self.phase.cancel()
         await self.message_controller.show_start_menu()
 
+    async def tts_phase_ended(self):
+        a = asyncio.ensure_future(self.message_controller.tts_phase_ended(True))
+
     # Notification Methods
 
     # # Start Menu Bundle
 
     async def start_menu_button_start(self):
+        await self.mix_the_partners_and_write()
         await self.message_controller.show_pre(self.ready_members)
 
     async def start_menu_button_intro(self):
@@ -240,7 +284,6 @@ class SystemController:
             await self.learning_session()
         else:
             await self.message_controller.show_pre(self.ready_members)
-        # TODO: READY LOGIC
 
     # # Learn Bundle
 
@@ -253,6 +296,8 @@ class SystemController:
     async def learn_button_melden(self, reporter):
         name_of_reporter = reporter.name
         name_of_partner = self.partners[name_of_reporter]
+
+        await self.admonish(name_of_partner)
 
         if self.current_points[name_of_partner] > 0:
             self.current_points[name_of_partner] -= 1

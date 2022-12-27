@@ -49,3 +49,13 @@ class MessageController:
         await self.edit(bundle, content="Prozess beendet")
         await asyncio.sleep(10)
         await self.message.delete()
+
+    async def tts_phase_ended(self, learning):
+        m = None
+        if learning:
+            m = await self.ctx.send(content="Lernphase beendet.", tts=True)
+        else:
+            m = await self.ctx.send(content="Pause beendet.", tts=True)
+        await asyncio.sleep(10)
+        await m.delete()
+

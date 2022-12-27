@@ -25,8 +25,13 @@ async def clear(ctx):
 @bot.command()
 async def test(ctx):
     ts_in_ten_secs = int(datetime.datetime.now().timestamp()) + 10
-
     await ctx.send(content="<t:" + str(ts_in_ten_secs) + ":R>")
 
+
+@bot.command()
+async def mute(ctx):
+    mem = ctx.guild.members
+    for m in mem:
+        await m.edit(mute=False)
 
 bot.run(TOKEN)
