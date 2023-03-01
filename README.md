@@ -23,3 +23,10 @@ access_token = ""
 16. Copy the generated link below.
 17. Paste it into the browser. Select the Discord-Server, you want to add the bot to.
 18. Run the `main.py` script.
+
+## Start the Bot in Discord
+After you've finished the steps before, the Discord Bot should be marked as 'online' in Discord.
+
+Before you start the Bot, please make sure, that all participants are in the same voice-channel. The bot will only consider the voice-channel with the most members. 
+
+After done, you can write `$start` into a text-chat. The bot will only consider the text-channel, you write the `$start`-command into.
