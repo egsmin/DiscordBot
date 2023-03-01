@@ -10,11 +10,11 @@ DiscordBot for learning purposes and help for self-control throug socially share
 6. Give the bot a name
 7. Copy the Token. You have to click on **View Token**, in order to see it and be able to copy it.
 8. Open the project, you already have cloned in Step 1, in a development tool of your choice.
-9. You have to rename the file, named 'config_template.py' into 'config.py'
-10. Open 'config.py'. You will see the following code:
-'''
+9. You have to rename the file, named `config_template.py` into `config.py`
+10. Open `config.py`. You will see the following code:
+```python
 access_token = ""
-'''
+```
 11. You have to paste the token here, which you've copied in step 7.
 12. Please go back to the [https://discord.com/developers](Discord Developer Portal)
 13. On the left side, switch to the **OAuth2 > URL Generator** Section
@@ -22,4 +22,4 @@ access_token = ""
 15. After that, the **Bot Permissions** selection will appear. Please select the **Administrator** here.
 16. Copy the generated link below.
 17. Paste it into the browser. Select the Discord-Server, you want to add the bot to.
-18. Run the 'main.py' script.
+18. Run the `main.py` script.
