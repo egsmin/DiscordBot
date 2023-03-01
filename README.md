@@ -3,7 +3,7 @@ DiscordBot for learning purposes and help for self-control throug socially share
 
 ## How to run the Bot
 1. Clone this project.
-2. Go to the [https://discord.com/developers](Discord Developer Portal) and log in.
+2. Go to the [Discord Developer Portal](https://discord.com/developers) and log in.
 3. Create a new application and give it a name (this name is *not* the name of the bot, that occurs in Discord).
 4. After you have created the application, go the **Bot** section on the left side.
 5. Click on **Add Bot**
@@ -16,7 +16,7 @@ DiscordBot for learning purposes and help for self-control throug socially share
 access_token = ""
 ```
 11. You have to paste the token here, which you've copied in step 7.
-12. Please go back to the [https://discord.com/developers](Discord Developer Portal)
+12. Please go back to the [Discord Developer Portal](https://discord.com/developers)
 13. On the left side, switch to the **OAuth2 > URL Generator** Section
 14. In the **scopes** selection, you select **bot**
 15. After that, the **Bot Permissions** selection will appear. Please select the **Administrator** here.
