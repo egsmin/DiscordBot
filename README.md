@@ -30,3 +30,5 @@ After you've finished the steps before, the Discord Bot should be marked as 'onl
 Before you start the Bot, please make sure, that all participants are in the same voice-channel. The bot will only consider the voice-channel with the most members. 
 
 After done, you can write `$start` into a text-channel of your choice. The bot will only consider the text-channel, you write the `$start`-command into.
+
+The Bot will switch its status to 'offline', when you stop the python script.
