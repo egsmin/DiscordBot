@@ -1,5 +1,5 @@
 # DiscordBot
-DiscordBot for learning purposes and help for self-control throug socially shared regulation of learning. 
+DiscordBot for learning purposes and help for self-control through socially shared regulation of learning. 
 
 ## How to run the Bot
 1. Clone this project.
