@@ -134,12 +134,18 @@ class IntroductionBundle:
         inline=False
     ).add_field(
         name="Lernphase",
-        value="1. Bitte aktiviert den Ruhemodus / Nicht-Stören-Modus eures Handys. Es ist wichtig, dass ihr euch nicht von Benachrichtigungen und Mitteilungen ablenken lasst. \n2. Vermeidet ablenkende Inhalte auf eurem PC.\n3. Aktiviert eure Bildschirmübertragung\n4.Ihr bekommt einen Partner zugewiesen, dessen Bildschirm und Verhalten ihr während des Lernens im MILDEREN Maße überwachen sollt.",
+        value="1. Bitte aktiviert den Ruhemodus / Nicht-Stören-Modus eures Handys. Es ist wichtig, dass ihr euch nicht von Benachrichtigungen und Mitteilungen ablenken lasst. \n2. Vermeidet ablenkende Inhalte auf eurem PC.\n3. Aktiviert eure Bildschirmübertragung\n4. Ihr bekommt einen Partner zugewiesen, dessen Bildschirm und Verhalten ihr während des Lernens im MILDEREN Maße überwachen sollt.",
         inline=False
     ).add_field(
         name="Pause",
         value="Ihr dürft während der Pause machen, was ihr wollt! Benutzt eure Mobilgeräte und Computer oder quatscht miteinander. Das ist euch überlassen",
         inline=False
+    ).add_field(
+        name="Melden",
+        value="Ihr könnt während der Lernphasen den Melden-Button klicken, falls euer Partner ablenkendes Verhalten aufweist. Dieser wird daraufhin benachrichtigt und kriegt einen Punkabzug."
+    ).add_field(
+        name="Punkte",
+        value="Basispunktzahl: 10\nAbzug pro Vergehen: -1\nBonus, falls kein Abzug: 5\nBonus, falls ALLE kein Abzug: 10"
     ).add_field(
         name="Sonstiges",
         value="Alles weitere wird sich im Laufe der Session klären!\n\nFalls ihr fertig seid mit dem Lernen, drückt einfach auf Stop.\n\nVIEL ERFOLG!",
@@ -156,10 +162,10 @@ class IntroductionBundle:
             await interaction.response.defer()
             await self.sc.intro_button_zurueck()
 
-        @discord.ui.button(label='Tutorial', style=discord.ButtonStyle.green)
-        async def button_callback_tutorial(self, interaction: discord.Interaction, button: discord.ui.Button):
-            await interaction.response.defer()
-            await self.sc.intro_button_tutorial()
+        # @discord.ui.button(label='Tutorial', style=discord.ButtonStyle.green)
+        # async def button_callback_tutorial(self, interaction: discord.Interaction, button: discord.ui.Button):
+        #     await interaction.response.defer()
+        #     await self.sc.intro_button_tutorial()
 
     @classmethod
     def create_bundle(cls, sc):
@@ -216,7 +222,7 @@ class PreBundle:
             inline=False
         ).add_field(
             name="Partner beobachten",
-            value="Ihr habt nun einen Partner zugewiesen bekommen. Bitte beobachtet dessen Bildschirm. Falls noch unklar ist, wie die Übertragung am Besten beobachtet werden kann, schaut einfach im Start Menü unter Intro -> Tutorial nach, oder schreibt mir \"$tutorial\" per Privatchat",
+            value="Ihr habt nun einen Partner zugewiesen bekommen. Bitte beobachtet dessen Bildschirm.",
             inline=False
         ).add_field(
             name="Bereit:",
