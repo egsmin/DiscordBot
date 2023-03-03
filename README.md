@@ -12,23 +12,26 @@ DiscordBot for learning purposes and help for self-control through socially shar
 8. Open the project, you already have cloned in Step 1, in a development tool of your choice.
 9. You have to rename the file, named `config_template.py` into `config.py`
 10. Open `config.py`. You will see the following code:
-```python
-access_token = ""
-```
+    ```python
+    access_token = ""
+    ```
 11. You have to paste the token here, which you've copied in step 7.
 12. Please go back to the [Discord Developer Portal](https://discord.com/developers)
 13. On the left side, switch to the **OAuth2 > URL Generator** Section
 14. In the **scopes** selection, you select **bot**
 15. After that, the **Bot Permissions** selection will appear. Please select the **Administrator** here.
 16. Copy the generated link below.
-17. Paste it into the browser. Select the Discord-Server, you want to add the bot to.
+17. Paste it into the browser. Select the Discord-Server, you want to add the bot to (Of course, you have to be admin of a server for this step).
+18. Run the following commands in terminal:
+    ```
+    pip install discord
+    ```
 18. Run the `main.py` script.
 
 ## Start the Bot in Discord
-After you've finished the steps before, the Discord Bot should be marked as 'online' in Discord.
+1. After you've finished the steps before, the Discord Bot should be marked as 'online' in Discord.
+2. Before you start the Bot, please make sure, that all participants are in the same voice-channel. The bot will only consider the voice-channel with the most members.
+3. After done, you can write `$start` into a text-channel of your choice. The bot will only consider the text-channel, you write the `$start`-command into.
+4. The Bot will switch its status to 'offline', when you stop the python script.
 
-Before you start the Bot, please make sure, that all participants are in the same voice-channel. The bot will only consider the voice-channel with the most members. 
-
-After done, you can write `$start` into a text-channel of your choice. The bot will only consider the text-channel, you write the `$start`-command into.
-
-The Bot will switch its status to 'offline', when you stop the python script.
+Please contact me for help.
