@@ -7,48 +7,92 @@ from Controller.MessageController import MessageController
 class SystemController:
     def __init__(self, ctx):
 
+        # Kontext der Nachricht (Referenz zur Umgebung in Discord)
         self.ctx = ctx
 
+        # MessageController dient zur zentralen Steuerung der Ansicht der Nachricht
         self.message_controller = MessageController(ctx, self)
 
+        # Referenz zum aktuellen Server
         self.guild = ctx.guild
+
+        # Referenz zum Textkanal
         self.text_channel = ctx.channel
 
-        # Get Voice-Channel with most members in it
+        # Bestimme Sprachkanal mit den meisten Members
         voice_channels: list = self.guild.voice_channels
         copy_vcs = voice_channels.copy()
         copy_vcs.sort(key=lambda x: len(x.members), reverse=True)
         self.voice_channel = copy_vcs[0]
 
+        # Referenz zu den Members des Sprachkanals
         self.members = self.get_members()
+
+        # Gesamtpunktzahl
         self.global_points = {}
+
+        # Punktzahl pro Runde (wird nach jeder Runde zurueckgesetzt
         self.current_points = {}
+
+        # Dictionary fuer die Bestimmung der jeweiligen Partner, die beobachtet werden sollen
         self.partners = {}
+
+        # Liste der Members, die in der Pre-Ansicht "Bereit" geklickt haben
         self.ready_members = []
 
+        # Asynchrones Objekt, fuer Prozessverwaltung der aktuellen Phase (Lernphase | Pause)
         self.phase = None
 
+        # Statusvariable (True, wenn die Teilnehmer lernen
         self.learning = True
+
+        # Ist True, wenn Lernprozess gestoppt werden soll
         self.stopped = False
+
+        # True in der ersten Runde, sonst immer False
         self.fist = True
 
+        # Dauer einer Lernphase
         self.learning_duration = 30
+
+        # Dauer einer Pause
         self.pause_duration = 5
+
+        # True, wenn ausgewaehlt wurde, dass die Lernenden waehrend der Lernphasen gestummt werden wollen.
         self.mute = False
 
     async def start(self):
+        """ Startfunktion fuer den Systemcontroller
+
+        :return:
+        """
         await self.bunch(with_calculation=False)
         await self.message_controller.initialize()
 
+    # ##############
     # Member Methods
-
+    # ##############
     def get_members(self):
+        """ Hilfsfunktion, um die Member des aktuellen Sprachkanals zu bestimmen
+
+        :return: Member des aktuellen Sprachkanals
+        """
         return [i for i in self.voice_channel.members]  # if i.name != "egsm1n"]
 
     def refresh_members(self):
+        """ Hilfsfunktion, um die Memberliste zu aktualisieren.
+
+        Diese Methode wird benoetigt, wenn neue Lernende dazu kommen.
+
+        :return:
+        """
         self.members = self.get_members()
 
     def reset_current_points(self):
+        """ Punktzahl pro Runde wird aktualisiert
+
+        :return:
+        """
         temp_dict = {}
         self.refresh_members()
 
@@ -58,6 +102,10 @@ class SystemController:
         self.current_points = temp_dict
 
     async def mix_the_partners_and_write(self):
+        """ Hilfsfunktion, um Dictionary von Partnern durch Zufall zu erstellen und die Teilnehmer zu benachrichtigen
+
+        :return:
+        """
         mixed = random.sample([i.name for i in self.members], len(self.members))
         temp_dict = {}
 
@@ -79,6 +127,10 @@ class SystemController:
             await p.send(content="Dein Partner ist: " + self.partners[i])
 
     def calculate_points(self):
+        """ Berechnet die Punktzahl für eine Runde.
+
+        :return:
+        """
         if all([points == 10 for points in self.current_points.values()]):
             for key_iter in self.global_points.keys():
                 self.global_points[key_iter] += 20
@@ -91,16 +143,21 @@ class SystemController:
                     self.global_points[key_iter] += self.current_points[key_iter]
 
     async def refresh_global_points(self):
+        """ Berechnet die neue Punktzahl unter Betracht der Punkte der aktuellen Runde
+
+        :return:
+        """
+
         self.refresh_members()
         changed = False
 
-        # Check if someone new has joined
+        # Checkt, ob jemand neues dazu gekommen ist
         for m in self.members:
             if m.name not in self.global_points.keys():
                 self.global_points[m.name] = 0
                 changed = True
 
-        # Check if someone has left
+        # Check ob jemand verlassen hat
         cop_dict = self.global_points.copy()
         for m in cop_dict.keys():
             if m not in [i.name for i in self.members]:
@@ -111,6 +168,11 @@ class SystemController:
             await self.mix_the_partners_and_write()
 
     async def bunch(self, with_calculation=False):
+        """ Zusammenfassung mehrerer Methoden
+
+        :param with_calculation: True, wenn Punkte ebenfalls aktualisiert werden sollen
+        :return:
+        """
         self.refresh_members()
 
         if with_calculation:
@@ -120,6 +182,10 @@ class SystemController:
         self.reset_current_points()
 
     async def write_everyones_partner(self):
+        """ Hilfsmethode, um den Teilnehmern zu schreiben, wer ihr Partner ist
+
+        :return:
+        """
         for i in self.partners.keys():
             p = None
             for m in self.members:
@@ -130,14 +196,26 @@ class SystemController:
             await p.send(content="Dein Partner ist: " + self.partners[i])
 
     async def admonish(self, reported):
+        """ Methode, um jemanden zu warnen, dass er beim ablenkenden Verhalten erwischt wurde
+
+        :param reported:
+        :return:
+        """
         for i in self.members:
             if i.name == reported:
                 await i.send("Du wurdest erwischt. Konzentriere dich wieder auf deine Aufgabe!")
                 break
 
+    # ################
     # Settings Methods
+    # ################
 
     async def mute_members(self):
+        """ Methode, um die Teilnehmer zu stummen
+
+        :return:
+        """
+
         for member in self.members:
             try:
                 await member.edit(mute=True)
@@ -145,6 +223,11 @@ class SystemController:
                 pass
 
     async def unmute_members(self):
+        """ Methode, um die Teilnehmer zu stummen
+
+        :return:
+        """
+
         for member in self.members:
             try:
                 await member.edit(mute=False)
@@ -155,12 +238,21 @@ class SystemController:
     # Learning Session
 
     async def learning_session(self):
+        """ Prozedur zur Darstellung einer Lernsystem
+
+        :return:
+        """
         async def learn_phase():
+            """ Methode fuer den Ablauf einer Lernphase
+
+            :return:
+            """
             timestamp_now = int(datetime.datetime.now().timestamp())
             timestamp_end = timestamp_now + self.learning_duration * 60
 
             time_to_wait = (self.learning_duration * 60) / 10
 
+            # Einteilung der Phase in 10 Abschnitte um Zeitleiste zu aktualisieren
             for i in range(10):
                 if not self.stopped:
                     await self.message_controller.show_learning(i, timestamp_end)
@@ -169,11 +261,16 @@ class SystemController:
                     break
 
         async def pause_phase():
+            """ Methode fuer den Ablauf einer Pause
+
+            :return:
+            """
             timestamp_now = int(datetime.datetime.now().timestamp())
             timestamp_end = timestamp_now + self.pause_duration * 60
 
             time_to_wait = (self.pause_duration * 60) / 10
 
+            # Einteilung der Phase in 10 Abschnitte um Zeitleiste zu aktualisieren
             for i in range(10):
                 if not self.stopped:
                     await self.message_controller.show_pause(i, timestamp_end, self.global_points)
@@ -224,9 +321,17 @@ class SystemController:
                 break
 
     async def skip_phase(self):
+        """ Methode, die das Ueberspringen der aktuellen Phase ermoeglicht
+
+        :return:
+        """
         self.phase.cancel()
 
     async def stop_session(self):
+        """ Methode, die das Abbrechen der Lernsession ermoeglicht
+
+        :return:
+        """
         self.stopped = True
         self.phase.cancel()
         await self.message_controller.show_start_menu()
@@ -234,9 +339,12 @@ class SystemController:
     async def tts_phase_ended(self):
         a = asyncio.ensure_future(self.message_controller.tts_phase_ended(True))
 
+    # ####################
     # Notification Methods
+    # Alle folgenden Methoden werden beim Betaetigen des entsprechenden Buttons aufgerufen
+    # ####################
 
-    # # Start Menu Bundle
+    # Start Menu Bundle
 
     async def start_menu_button_start(self):
         await self.mix_the_partners_and_write()
@@ -251,7 +359,7 @@ class SystemController:
     async def start_menu_button_beenden(self):
         await self.message_controller.show_end()
 
-    # # Conf Bundle
+    # Conf Bundle
 
     async def conf_select_lerndauer(self, selected):
         self.learning_duration = int(selected)
@@ -265,7 +373,7 @@ class SystemController:
     async def conf_button_zurueck(self):
         await self.message_controller.show_start_menu()
 
-    # # Intro Bundle
+    # Intro Bundle
 
     async def intro_button_zurueck(self):
         await self.message_controller.show_start_menu()
@@ -274,7 +382,7 @@ class SystemController:
         pass
         # TODO: TUTORIAL
 
-    # # Pre Bundle
+    # Pre Bundle
 
     async def pre_button_bereit(self, presser):
         if presser.name not in [i.name for i in self.ready_members]:
@@ -285,7 +393,7 @@ class SystemController:
         else:
             await self.message_controller.show_pre(self.ready_members)
 
-    # # Learn Bundle
+    # Learn Bundle
 
     async def learn_button_stop(self):
         await self.stop_session()
@@ -302,7 +410,7 @@ class SystemController:
         if self.current_points[name_of_partner] > 0:
             self.current_points[name_of_partner] -= 1
 
-    # # Pause Bundle
+    # Pause Bundle
 
     async def pause_button_stop(self):
         await self.stop_session()

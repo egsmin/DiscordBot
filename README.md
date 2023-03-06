@@ -30,8 +30,12 @@ DiscordBot for learning purposes and help for self-control through socially shar
 
 ## Start the Bot in Discord
 1. After you've finished the steps before, the Discord Bot should be marked as 'online' in Discord.
-2. Before you start the Bot, please make sure, that all participants are in the same voice-channel. The bot will only consider the voice-channel with the most members.
-3. After done, you can write `$start` into a text-channel of your choice. The bot will only consider the text-channel, you write the `$start`-command into.
-4. The Bot will switch its status to 'offline', when you stop the python script.
+2. Before you start the Bot, please make sure, that 
+   1. you have created at least one text-channel
+   2. you have created at least one voice-channel
+   3. all participants, are in the same voice-channel. 
+3. The bot will only consider the voice-channel with the most members.
+4. After done, you can write `$start` into a text-channel of your choice. The bot will only consider the text-channel, you write the `$start`-command into.
+5. The Bot will switch its status to 'offline', when you stop the python script.
 
 Please contact me for help.

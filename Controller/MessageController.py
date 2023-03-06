@@ -11,15 +11,32 @@ class MessageController:
         self.message = None
 
     async def initialize(self):
+        """ Initialisierung des MessageControllers
+
+        Hierbei wird eine Pseudonachricht versendet,
+        die im weiteren Verlauf des Lernprozesses immer wieder bearbeitet wird.
+
+        :return:
+        """
         self.message = await self.ctx.send(content="Lädt...")
         await self.show_start_menu()
 
     async def edit(self, bundle, content=None):
+        """ Hilfsfunktion, um das Bearbeiten der Nachricht zu vereinfachen
+
+        :param bundle:
+        :param content:
+        :return:
+        """
         embed = bundle['embed']
         view = bundle['view']
 
         await self.message.edit(embed=embed, view=view, content=content)
 
+    # ################
+    # Ansichtsmethoden
+    # Alle nachfolgenden Methoden dienen zur Darstellung der entsprechenden Ansichten
+    # ################
     async def show_start_menu(self):
         bundle = Bundles.StartMenuBundle.create_bundle(self.sc)
         await self.edit(bundle)
@@ -51,6 +68,12 @@ class MessageController:
         await self.message.delete()
 
     async def tts_phase_ended(self, learning):
+        """ Methode, damit der Bot eine Nachricht versenden kann die das Ende einer Phase klarstellt. Die Nachricht
+        wird akustisch ausgesprochen.
+
+        :param learning:
+        :return:
+        """
         m = None
         if learning:
             m = await self.ctx.send(content="Lernphase beendet.", tts=True)
