@@ -31,7 +31,7 @@ class SystemController:
         # Gesamtpunktzahl
         self.global_points = {}
 
-        # Punktzahl pro Runde (wird nach jeder Runde zurueckgesetzt
+        # Punktzahl pro Runde (wird nach jeder Runde zurueckgesetzt)
         self.current_points = {}
 
         # Dictionary fuer die Bestimmung der jeweiligen Partner, die beobachtet werden sollen
@@ -380,7 +380,6 @@ class SystemController:
 
     async def intro_button_tutorial(self):
         pass
-        # TODO: TUTORIAL
 
     # Pre Bundle
 
